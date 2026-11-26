@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آزمایشگاه توابع و نمودارها | دکتر مریم هوتی نژاد</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+
+    <!-- MathJax v3 Configuration & Library -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            },
+            startup: {
+                typeset: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --navy: #0f172a;
+            --primary: #0284c7;
+            --turquoise: #0d9488;
+            --orange: #f97316;
+            --orange-light: #fff7ed;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.75;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        mjx-container {
+            direction: ltr;
+            display: inline-block;
+        }
+
+        /* Compact Top HUD Bar */
+        .hud-bar {
+            background: linear-gradient(135deg, var(--navy) 0%, #1e3a8a 100%);
+            color: white;
+            padding: 0.42rem 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.18);
+            font-size: 0.78rem;
+        }
+
+        .brand-info {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hud-stats {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            flex-wrap: nowrap;
+        }
+
+        .stat-pill {
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            padding: 0.16rem 0.55rem;
+            border-radius: 999px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            white-space: nowrap;
+        }
+
+        .progress-wrapper {
+            width: 64px;
+            background: rgba(255, 255, 255, 0.22);
+            height: 7px;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--turquoise), var(--orange));
+            transition: width 0.4s ease;
+        }
+
+        @media (max-width: 640px) {
+            .hud-bar {
+                padding: 0.35rem 0.6rem;
+                gap: 0.35rem;
+            }
+            .brand-title-full {
+                display: none;
+            }
+            .brand-title-short {
+                display: inline;
+                font-weight: 800;
+            }
+            .stat-pill {
+                padding: 0.12rem 0.42rem;
+                font-size: 0.68rem;
+            }
+            .progress-wrapper {
+                width: 44px;
+                height: 6px;
+            }
+        }
+
+        @media (min-width: 641px) {
+            .brand-title-short {
+                display: none;
+            }
+        }
+
+        /* Main Layout */
+        .container {
+            max-width: 1120px;
+            width: 100%;
+            margin: 0.85rem auto;
+            padding: 0 0.75rem;
+            flex: 1;
+        }
+
+        .screen {
+            display: none;
+            background: var(--card);
+            border-radius: 16px;
+            padding: 1.35rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            animation: slideUp 0.28s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Page 1: Hero & Student Registration */
+        .hero {
+            text-align: center;
+            padding: 1.6rem 1.2rem;
+            background: linear-gradient(135deg, #f0f9ff 0%, #ccfbf1 100%);
+            border-radius: 14px;
+            border: 2px solid #bae6fd;
+            margin-bottom: 1.2rem;
+        }
+
+        .hero h1 {
+            color: var(--navy);
+            font-size: 1.65rem;
+            font-weight: 900;
+            margin-bottom: 0.4rem;
+        }
+
+        .hero h2 {
+            color: var(--turquoise);
+            font-size: 1.08rem;
+            margin-bottom: 0.9rem;
+        }
+
+        .teacher-card {
+            display: inline-block;
+            background: white;
+            padding: 0.6rem 1.1rem;
+            border-radius: 10px;
+            border-right: 4px solid var(--orange);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+            font-size: 0.88rem;
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        .student-box {
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            border-radius: 14px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem;
+        }
+
+        .student-input-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.6rem;
+            flex: 1;
+        }
+
+        .student-input-group input {
+            font-family: 'Vazirmatn', sans-serif;
+            padding: 0.48rem 0.9rem;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            font-size: 0.92rem;
+            min-width: 210px;
+            outline: none;
+        }
+
+        .student-greeting {
+            font-weight: 700;
+            color: var(--turquoise);
+            font-size: 0.9rem;
+        }
+
+        .home-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Page 2: Compact Level Map */
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.85rem;
+            margin-top: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 0.45rem auto;
+                padding: 0 0.45rem;
+            }
+            .screen {
+                padding: 0.8rem;
+                border-radius: 12px;
+            }
+            .hero h1 {
+                font-size: 1.25rem;
+            }
+            .hero h2 {
+                font-size: 0.92rem;
+            }
+            .levels-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.55rem;
+            }
+        }
+
+        .level-card {
+            background: #f8fafc;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 112px;
+        }
+
+        .level-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+            background: #f0f9ff;
+        }
+
+        .level-card.completed {
+            border-color: var(--success);
+            background: #ecfdf5;
+        }
+
+        .level-num {
+            display: inline-block;
+            background: var(--navy);
+            color: white;
+            padding: 0.12rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+            width: fit-content;
+        }
+
+        .level-card.completed .level-num {
+            background: var(--success);
+        }
+
+        .level-card h3 {
+            color: var(--navy);
+            font-size: 0.92rem;
+            margin-bottom: 0.25rem;
+            line-height: 1.4;
+        }
+
+        .level-card p {
+            color: var(--muted);
+            font-size: 0.76rem;
+            line-height: 1.45;
+        }
+
+        @media (max-width: 640px) {
+            .level-card {
+                padding: 0.6rem;
+                min-height: 92px;
+            }
+            .level-card p {
+                display: none;
+            }
+            .level-card h3 {
+                font-size: 0.82rem;
+            }
+        }
+
+        /* Lesson Header */
+        .lesson-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.65rem;
+            margin-bottom: 0.9rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .lesson-top h2 {
+            color: var(--navy);
+            font-size: 1.2rem;
+        }
+
+        .btn {
+            font-family: 'Vazirmatn', sans-serif;
+            border: none;
+            border-radius: 9px;
+            padding: 0.45rem 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.88rem;
+        }
+
+        .btn-back {
+            background: #e2e8f0;
+            color: var(--navy);
+        }
+
+        .btn-back:hover {
+            background: #cbd5e1;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0369a1;
+        }
+
+        .btn-orange {
+            background: var(--orange);
+            color: white;
+        }
+
+        .btn-orange:hover {
+            background: #ea580c;
+        }
+
+        /* Explanation & Examples */
+        .tip-box {
+            background: #f0f9ff;
+            border-right: 4px solid var(--primary);
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            margin-bottom: 0.85rem;
+            font-size: 0.9rem;
+        }
+
+        .tip-box p {
+            margin-bottom: 0.35rem;
+        }
+
+        .formula-pill {
+            display: inline-block;
+            background: var(--navy);
+            color: #38bdf8;
+            padding: 0.15rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            direction: ltr;
+            margin: 0.15rem 0.2rem;
+            font-weight: bold;
+        }
+
+        .examples-bar {
+            background: var(--orange-light);
+            border: 1px solid #fed7aa;
+            border-radius: 12px;
+            padding: 0.85rem 1rem;
+            margin: 0.85rem 0;
+        }
+
+        .examples-bar h4 {
+            color: #c2410c;
+            margin-bottom: 0.5rem;
+            font-size: 0.92rem;
+        }
+
+        .preset-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .preset-btn {
+            background: white;
+            border: 1.5px solid var(--orange);
+            color: #9a3412;
+            padding: 0.32rem 0.7rem;
+            border-radius: 7px;
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            background: var(--orange);
+            color: white;
+        }
+
+        .example-explain {
+            background: white;
+            padding: 0.65rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            color: var(--text);
+            border-right: 3px solid var(--orange);
+        }
+
+        /* Interactive Workspace Grid (Chart gets larger share) */
+        .lab-grid {
+            display: grid;
+            grid-template-columns: 0.78fr 1.52fr;
+            gap: 1rem;
+            align-items: start;
+            margin: 0.9rem 0;
+        }
+
+        @media (max-width: 820px) {
+            .lab-grid {
+                grid-template-columns: 1fr;
+                gap: 0.65rem;
+            }
+        }
+
+        .controls-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.9rem;
+        }
+
+        .slider-item {
+            margin-bottom: 0.75rem;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 0.88rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .badge-val {
+            background: var(--navy);
+            color: white;
+            padding: 0.08rem 0.5rem;
+            border-radius: 5px;
+            direction: ltr;
+            font-family: monospace;
+            font-size: 0.82rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--orange);
+            cursor: pointer;
+        }
+
+        .live-status {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 0.65rem 0.8rem;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--navy);
+        }
+
+        .canvas-box {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 0.35rem;
+        }
+
+        canvas {
+            width: 100%;
+            height: 410px;
+            display: block;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 640px) {
+            canvas {
+                height: 320px;
+            }
+        }
+
+        /* Game Challenge Box */
+        .challenge-box {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            border-radius: 14px;
+            padding: 1.15rem;
+            margin-top: 1.1rem;
+            border: 2px solid var(--turquoise);
+        }
+
+        .challenge-tag {
+            background: var(--turquoise);
+            color: white;
+            padding: 0.15rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            display: inline-block;
+            margin-bottom: 0.45rem;
+        }
+
+        .challenge-box h3 {
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.65rem;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            color: white;
+            padding: 0.65rem 0.85rem;
+            border-radius: 9px;
+            font-family: 'Vazirmatn', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: right;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--orange);
+        }
+
+        .feedback-msg {
+            margin-top: 0.8rem;
+            padding: 0.65rem 0.9rem;
+            border-radius: 9px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            display: none;
+        }
+
+        .feedback-msg.success {
+            display: block;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--success);
+            color: #6ee7b7;
+        }
+
+        .feedback-msg.error {
+            display: block;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid var(--danger);
+            color: #fca5a5;
+        }
+
+        footer {
+            text-align: center;
+            padding: 0.9rem 1rem;
+            color: var(--muted);
+            font-size: 0.82rem;
+            margin-top: auto;
+        }
+
+        footer a {
+            color: var(--primary);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Compact HUD Top Bar -->
+    <header class="hud-bar">
+        <div class="brand-info">
+            <strong class="brand-title-full">آزمایشگاه توابع و نمودارها | ریاضی یازدهم فنی</strong>
+            <span class="brand-title-short">آزمایشگاه توابع یازدهم</span>
+        </div>
+        <div class="hud-stats">
+            <div class="stat-pill">👩‍🎓 <span id="hud-student">مهمان</span></div>
+            <div class="stat-pill">🏆 امتیاز: <span id="hud-score">0</span></div>
+            <div class="stat-pill">🎖️ <span id="hud-rank">کارآموز</span></div>
+            <div class="stat-pill">
+                <span>پیشرفت:</span>
+                <div class="progress-wrapper">
+                    <div class="progress-fill" id="hud-progress"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- Page 1: Mission, Teacher Info & Student Name -->
+        <section id="screen-home" class="screen active">
+            <div class="hero">
+                <h1>مأموریت بزرگ: رمزگشایی از خط‌ها و سهمی‌ها!</h1>
+                <h2>آموزش ساده، تصویری و بازی‌وار پودمان دوم ریاضی پایه یازدهم فنی</h2>
+                <div class="teacher-card">
+                    مدرس: دکتر مریم هوتی نژاد (دکترای تخصصی هوش مصنوعی و رباتیک) | هنرستان ایثارگران بانک ملت
+                </div>
+            </div>
+
+            <div class="student-box">
+                <div class="student-input-group">
+                    <label for="student-name-input" style="font-weight: 800; color: var(--navy);">✏️ نام و نام خانوادگی هنرجو:</label>
+                    <input type="text" id="student-name-input" placeholder="نام خود را وارد کنید...">
+                    <button class="btn btn-primary" onclick="saveStudentName()">ثبت نام</button>
+                </div>
+                <div class="student-greeting" id="student-greeting-msg">
+                    نام خود را ثبت کنید تا در کارنامه و سربرگ ذخیره شود.
+                </div>
+            </div>
+
+            <div class="home-actions">
+                <span style="font-size: 0.88rem; color: var(--muted);" id="resume-hint">
+                    پیشرفت شما به صورت خودکار در مرورگر ذخیره می‌شود.
+                </span>
+                <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+                    <button class="btn btn-orange" onclick="openLevel('screen-map')">ورود به نقشه مراحل یادگیری ←</button>
+                    <button class="btn btn-back" onclick="resetProgress()">شروع مجدد از صفر</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page 2: Level Map -->
+        <section id="screen-map" class="screen">
+            <div class="lesson-top">
+                <h2>🗺️ نقشه مراحل یادگیری پودمان دوم</h2>
+                <button class="btn btn-back" onclick="openLevel('screen-home')">صفحه معرفی و نام هنرجو</button>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.4rem;">
+                <span style="font-size: 0.86rem; color: var(--muted);">روی هر مرحله کلیک کنید؛ با حل چالش پایان مرحله، ۱۰۰ امتیاز بگیرید.</span>
+                <span style="font-size: 0.84rem; font-weight: 700; color: var(--turquoise);" id="map-progress-summary">۰ از ۶ مرحله تکمیل شده</span>
+            </div>
+
+            <div class="levels-grid">
+                <div class="level-card" id="card-lvl1" onclick="openLevel('screen-lvl1')">
+                    <div>
+                        <span class="level-num">مرحله ۱</span>
+                        <h3>تابع خطی و تابع ثابت</h3>
+                        <p>شیب خط (صعودی/نزولی)، عرض از مبدأ و خط ثابت با مثال‌های زنده.</p>
+                    </div>
+                    <div style="margin-top: 0.5rem; font-weight: 700; color: var(--primary); font-size: 0.8rem;">ورود ←</div>
+                </div>
+
+                <div class="level-card" id="card-lvl2" onclick="openLevel('screen-lvl2')">
+                    <div>
+                        <span class="level-num">مرحله ۲</span>
+                        <h3>توابع با دامنه محدود</h3>
+                        <p>بازه بسته (نقطه توپر ●) و بازه باز (نقطه توخالی ○) در پاره‌خط‌ها.</p>
+                    </div>
+                    <div style="margin-top: 0.5rem; font-weight: 700; color: var(--primary); font-size: 0.8rem;">ورود ←</div>
+                </div>
+
+                <div class="level-card" id="card-lvl3" onclick="openLevel('screen-lvl3')">
+                    <div>
+                        <span class="level-num">مرحله ۳</span>
+                        <h3>ورود به دنیای سهمی‌ها</h3>
+                        <p>نمودار مادر درجه دوم، جهت منحنی سهمی و تقارن.</p>
+                    </div>
+                    <div style="margin-top: 0.5rem; font-weight: 700; color: var(--primary); font-size: 0.8rem;">ورود ←</div>
+                </div>
+
+                <div class="level-card" id="card-lvl4" onclick="openLevel('screen-lvl4')">
+                    <div>
+                        <span class="level-num">مرحله ۴</span>
+                        <h3>انتقال افقی و عمودی</h3>
+                        <p>جابجایی چپ/راست (مخالف علامت) و بالا/پایین (مطابق علامت).</p>
+                    </div>
+                    <div style="margin-top: 0.5rem; font-weight: 700; color: var(--primary); font-size: 0.8rem;">ورود ←</div>
+                </div>
+
+                <div class="level-card" id="card-lvl5" onclick="openLevel('screen-lvl5')">
+                    <div>
+                        <span class="level-num">مرحله ۵</span>
+                        <h3>فرمول رأس سهمی</h3>
+                        <p>محاسبه رأس با فرمول \(x = -\frac{b}{2a}\) و نقاط متقارن.</p>
+                    </div>
+                    <div style="margin-top: 0.5rem; font-weight: 700; color: var(--primary); font-size: 0.8rem;">ورود ←</div>
+                </div>
+
+                <div class="level-card" id="card-lvl6" onclick="openLevel('screen-lvl6')">
+                    <div>
+                        <span class="level-num">مرحله ۶</span>
+                        <h3>معادله و نامعادله</h3>
+                        <p>ریشه‌ها روی محور \(x\) و هاشور بالای محور یا زیر محور.</p>
+                    </div>
+                    <div style="margin-top: 0.5rem; font-weight: 700; color: var(--orange); font-size: 0.8rem;">ورود ←</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LEVEL 1 -->
+        <section id="screen-lvl1" class="screen">
+            <div class="lesson-top">
+                <h2>📏 مرحله ۱: تابع خطی و تابع ثابت</h2>
+                <button class="btn btn-back" onclick="openLevel('screen-map')">نقشه مراحل</button>
+            </div>
+
+            <div class="tip-box">
+                <p><strong>به زبان ساده:</strong> اگر بزرگترین توان \(x\) برابر ۱ باشد، نمودار یک <strong>خط مستقیم</strong> است: <span class="formula-pill">\(f(x) = ax + b\)</span></p>
+                <p>• <strong>\(a\) (شیب):</strong> اگر \(a > 0\) صعودی است، اگر \(a < 0\) نزولی است و اگر \(a = 0\) باشد <strong>تابع ثابت</strong> (افقی) داریم.</p>
+                <p>• <strong>\(b\) (عرض از مبدأ):</strong> محل برخورد خط با محور عمودی \(y\).</p>
+            </div>
+
+            <div class="examples-bar">
+                <h4>📌 مثال‌های متنوع جزوه (روی هر مثال کلیک کنید):</h4>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setLvl1(2, 1, 'مثال ۱: تابع صعودی $f(x) = 2x + 1$ — شیب ($2$) مثبت است؛ از چپ به راست بالا می‌رود و محور $y$ را در $(0, 1)$ قطع می‌کند.')">\(f(x) = 2x + 1\)</button>
+                    <button class="preset-btn" onclick="setLvl1(3, -2, 'مثال ۲: تابع صعودی $f(x) = 3x - 2$ — با $x=0$ نقطه $(0, -2)$ و با $x=1$ نقطه $(1, 1)$ حاصل می‌شود.')">\(f(x) = 3x - 2\)</button>
+                    <button class="preset-btn" onclick="setLvl1(0, 2, 'مثال ۳: تابع ثابت $f(x) = 2$ — خطی کاملاً افقی موازی محور $x$ در ارتفاع $2$.')">تابع ثابت \(f(x) = 2\)</button>
+                    <button class="preset-btn" onclick="setLvl1(0, -1, 'مثال ۴: تابع ثابت $f(x) = -1$ — خطی افقی در پایین محور $x$ در ارتفاع $-1$.')">تابع ثابت \(f(x) = -1\)</button>
+                    <button class="preset-btn" onclick="setLvl1(-2, 3, 'مثال ۵: تابع نزولی $f(x) = -2x + 3$ — چون شیب ($-2$) منفی است، از چپ به راست پایین می‌آید.')">نزولی \(f(x) = -2x + 3\)</button>
+                </div>
+                <div class="example-explain" id="explain-lvl1">روی یکی از مثال‌های بالا کلیک کنید یا اهرم‌ها را حرکت دهید.</div>
+            </div>
+
+            <div class="lab-grid">
+                <div class="controls-card">
+                    <div class="slider-item">
+                        <div class="slider-header"><span>شیب (\(a\)):</span><span class="badge-val" id="disp-l1-a">2</span></div>
+                        <input type="range" id="in-l1-a" min="-4" max="4" step="0.5" value="2" oninput="drawLvl1()">
+                    </div>
+                    <div class="slider-item">
+                        <div class="slider-header"><span>عرض از مبدأ (\(b\)):</span><span class="badge-val" id="disp-l1-b">1</span></div>
+                        <input type="range" id="in-l1-b" min="-4" max="4" step="0.5" value="1" oninput="drawLvl1()">
+                    </div>
+                    <div class="live-status" id="status-lvl1"></div>
+                </div>
+                <div class="canvas-box">
+                    <canvas id="canvas-lvl1"></canvas>
+                </div>
+            </div>
+
+            <div class="challenge-box">
+                <span class="challenge-tag">🎯 چالش مرحله ۱ (+۱۰۰ امتیاز)</span>
+                <h3>اگر در تابع \(f(x) = ax + b\) داشته باشیم \(a = 0\) و \(b = -4\)، نمودار چگونه است؟</h3>
+                <div class="options-grid">
+                    <button class="option-btn" onclick="checkAnswer(1, false, this)">خطی صعودی که از چپ به راست بالا می‌رود</button>
+                    <button class="option-btn" onclick="checkAnswer(1, true, this)">خطی کاملاً افقی موازی محور \(x\) در \(y = -4\)</button>
+                    <button class="option-btn" onclick="checkAnswer(1, false, this)">منحنی سهمی رو به پایین</button>
+                </div>
+                <div class="feedback-msg" id="fb-lvl1"></div>
+            </div>
+        </section>
+
+        <!-- LEVEL 2 -->
+        <section id="screen-lvl2" class="screen">
+            <div class="lesson-top">
+                <h2>✂️ مرحله ۲: توابع با دامنه محدود (پاره‌خط)</h2>
+                <button class="btn btn-back" onclick="openLevel('screen-map')">نقشه مراحل</button>
+            </div>
+
+            <div class="tip-box">
+                <p><strong>به زبان ساده:</strong> وقتی \(x\) فقط بین دو مقدار مشخص (مثلاً از \(x_1\) تا \(x_2\)) مجاز باشد، نمودار به شکل <strong>پاره‌خط</strong> است.</p>
+                <p>• <strong>بازه بسته \([ \, ]\) (توپر ●):</strong> خود نقطه جزو دامنه است. • <strong>بازه باز \(( \, )\) (توخالی ○):</strong> خود نقطه جزو دامنه نیست.</p>
+            </div>
+
+            <div class="examples-bar">
+                <h4>📌 مثال‌های متنوع دامنه محدود:</h4>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setLvl2(-2, 1, 2, 3, true, false, 'مثال جزوه: $f(x) = -2x + 1$ در $[2, 3)$ — نقطه $x=2$ توپر ● در $(2, -3)$ و نقطه $x=3$ توخالی ○ در $(3, -5)$.')">\(f(x)=-2x+1\) در \([2, 3)\)</button>
+                    <button class="preset-btn" onclick="setLvl2(1, -1, -1, 3, true, true, 'مثال ۲: $f(x) = x - 1$ در $[-1, 3]$ — هر دو سر پاره‌خط بسته و توپر ● هستند.')">\(f(x)=x-1\) در \([-1, 3]\)</button>
+                    <button class="preset-btn" onclick="setLvl2(-1, 2, -2, 2, false, false, 'مثال ۳: $f(x) = -x + 2$ در $(-2, 2)$ — هر دو سر پاره‌خط باز و توخالی ○ هستند.')">\(f(x)=-x+2\) در \((-2, 2)\)</button>
+                </div>
+                <div class="example-explain" id="explain-lvl2">بازه شروع و پایان یا توپر/توخالی بودن نقاط را تغییر دهید.</div>
+            </div>
+
+            <div class="lab-grid">
+                <div class="controls-card">
+                    <div class="slider-item">
+                        <div class="slider-header"><span>شروع بازه (\(x_1\)):</span><span class="badge-val" id="disp-l2-x1">2</span></div>
+                        <input type="range" id="in-l2-x1" min="-4" max="1" step="1" value="2" oninput="drawLvl2()">
+                        <label style="font-size: 0.82rem; cursor: pointer;"><input type="checkbox" id="chk-l2-c1" checked onchange="drawLvl2()"> شروع بسته (توپر ●)</label>
+                    </div>
+                    <div class="slider-item">
+                        <div class="slider-header"><span>پایان بازه (\(x_2\)):</span><span class="badge-val" id="disp-l2-x2">3</span></div>
+                        <input type="range" id="in-l2-x2" min="2" max="5" step="1" value="3" oninput="drawLvl2()">
+                        <label style="font-size: 0.82rem; cursor: pointer;"><input type="checkbox" id="chk-l2-c2" onchange="drawLvl2()"> پایان بسته (توپر ●)</label>
+                    </div>
+                    <div class="live-status" id="status-lvl2"></div>
+                </div>
+                <div class="canvas-box">
+                    <canvas id="canvas-lvl2"></canvas>
+                </div>
+            </div>
+
+            <div class="challenge-box">
+                <span class="challenge-tag">🎯 چالش مرحله ۲ (+۱۰۰ امتیاز)</span>
+                <h3>برای تابع \(f(x) = 3x - 1\) در دامنه \((1, 4]\). نقطه متناظر با \(x = 1\) چگونه رسم می‌شود؟</h3>
+                <div class="options-grid">
+                    <button class="option-btn" onclick="checkAnswer(2, true, this)">دایره توخالی ○ در \((1, 2)\)</button>
+                    <button class="option-btn" onclick="checkAnswer(2, false, this)">دایره توپر ● در \((1, 2)\)</button>
+                    <button class="option-btn" onclick="checkAnswer(2, false, this)">خط ممتد بی‌نهایت</button>
+                </div>
+                <div class="feedback-msg" id="fb-lvl2"></div>
+            </div>
+        </section>
+
+        <!-- LEVEL 3 -->
+        <section id="screen-lvl3" class="screen">
+            <div class="lesson-top">
+                <h2>🧲 مرحله ۳: ورود به دنیای سهمی‌ها</h2>
+                <button class="btn btn-back" onclick="openLevel('screen-map')">نقشه مراحل</button>
+            </div>
+
+            <div class="tip-box">
+                <p><strong>به زبان ساده:</strong> توابع درجه دوم (<span class="formula-pill">\(f(x) = ax^2\)</span>) نموداری منحنی به نام <strong>سهمی</strong> دارند.</p>
+                <p>• اگر \(a > 0\) باشد منحنی <strong>رو به بالا</strong> است و اگر \(a < 0\) باشد منحنی <strong>رو به پایین</strong> است.</p>
+            </div>
+
+            <div class="examples-bar">
+                <h4>📌 مثال‌های متنوع سهمی مادر:</h4>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setLvl3(1, 'مثال ۱: نمودار مادر $f(x) = x^2$ — رو به بالا با رأس $(0, 0)$ و نقاط $(1, 1)$ و $(-1, 1)$.')">\(f(x) = x^2\)</button>
+                    <button class="preset-btn" onclick="setLvl3(-1, 'مثال ۲: سهمی منفی $f(x) = -x^2$ — رو به پایین با رأس در مبدأ $(0, 0)$.')">\(f(x) = -x^2\)</button>
+                    <button class="preset-btn" onclick="setLvl3(2.5, 'مثال ۳: $f(x) = 2.5x^2$ — با افزایش $|a|$، دهانه منحنی جمع‌تر می‌شود.')">\(f(x) = 2.5x^2\)</button>
+                    <button class="preset-btn" onclick="setLvl3(0.5, 'مثال ۴: $f(x) = 0.5x^2$ — با کاهش $|a|$، دهانه منحنی بازتر می‌شود.')">\(f(x) = 0.5x^2\)</button>
+                </div>
+                <div class="example-explain" id="explain-lvl3">ضریب \(a\) را تغییر دهید تا تغییر جهت و باز/بسته شدن منحنی را ببینید.</div>
+            </div>
+
+            <div class="lab-grid">
+                <div class="controls-card">
+                    <div class="slider-item">
+                        <div class="slider-header"><span>ضریب \(a\):</span><span class="badge-val" id="disp-l3-a">1</span></div>
+                        <input type="range" id="in-l3-a" min="-3" max="3" step="0.5" value="1" oninput="drawLvl3()">
+                    </div>
+                    <div class="live-status" id="status-lvl3"></div>
+                </div>
+                <div class="canvas-box">
+                    <canvas id="canvas-lvl3"></canvas>
+                </div>
+            </div>
+
+            <div class="challenge-box">
+                <span class="challenge-tag">🎯 چالش مرحله ۳ (+۱۰۰ امتیاز)</span>
+                <h3>جهت منحنی سهمی \(f(x) = -3x^2\) و رأس آن کدام است؟</h3>
+                <div class="options-grid">
+                    <button class="option-btn" onclick="checkAnswer(3, false, this)">رو به بالا و رأس در \((0, -3)\)</button>
+                    <button class="option-btn" onclick="checkAnswer(3, true, this)">رو به پایین و رأس در \((0, 0)\)</button>
+                    <button class="option-btn" onclick="checkAnswer(3, false, this)">رو به پایین و رأس در \((-3, 0)\)</button>
+                </div>
+                <div class="feedback-msg" id="fb-lvl3"></div>
+            </div>
+        </section>
+
+        <!-- LEVEL 4 -->
+        <section id="screen-lvl4" class="screen">
+            <div class="lesson-top">
+                <h2>🚀 مرحله ۴: انتقال افقی و عمودی سهمی</h2>
+                <button class="btn btn-back" onclick="openLevel('screen-map')">نقشه مراحل</button>
+            </div>
+
+            <div class="tip-box">
+                <p><strong>فرم انتقالی:</strong> <span class="formula-pill">\(f(x) = a(x - h)^2 + k\)</span> — رأس جدید در نقطه \((h, k)\) قرار می‌گیرد.</p>
+                <p>• داخل پرانتز (افقی): <strong>مخالف علامت</strong>. • بیرون پرانتز (عمودی): <strong>مطابق علامت</strong>.</p>
+            </div>
+
+            <div class="examples-bar">
+                <h4>📌 مثال‌های گام‌به‌گام جزوه (خط‌چین خاکستری نمودار مادر \(y = x^2\) است):</h4>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setLvl4(-2, 0, 'مثال ۱: $f(x) = (x + 2)^2$ — انتقال $2$ واحد به چپ؛ رأس در $(-2, 0)$.')">\(y = (x + 2)^2\)</button>
+                    <button class="preset-btn" onclick="setLvl4(3, 0, 'مثال ۲: $f(x) = (x - 3)^2$ — انتقال $3$ واحد به راست؛ رأس در $(3, 0)$.')">\(y = (x - 3)^2\)</button>
+                    <button class="preset-btn" onclick="setLvl4(0, 3, 'مثال ۳: $f(x) = x^2 + 3$ — انتقال $3$ واحد به بالا؛ رأس در $(0, 3)$.')">\(y = x^2 + 3\)</button>
+                    <button class="preset-btn" onclick="setLvl4(-1, -3, 'مثال ۴: $f(x) = (x + 1)^2 - 3$ — $1$ واحد به چپ و $3$ واحد به پایین؛ رأس در $(-1, -3)$.')">\(y = (x + 1)^2 - 3\)</button>
+                </div>
+                <div class="example-explain" id="explain-lvl4">با تغییر \(h\) و \(k\) انتقال رأس را روی نمودار ببینید.</div>
+            </div>
+
+            <div class="lab-grid">
+                <div class="controls-card">
+                    <div class="slider-item">
+                        <div class="slider-header"><span>انتقال افقی (\(h\)):</span><span class="badge-val" id="disp-l4-h">-1</span></div>
+                        <input type="range" id="in-l4-h" min="-4" max="4" step="1" value="-1" oninput="drawLvl4()">
+                    </div>
+                    <div class="slider-item">
+                        <div class="slider-header"><span>انتقال عمودی (\(k\)):</span><span class="badge-val" id="disp-l4-k">-3</span></div>
+                        <input type="range" id="in-l4-k" min="-4" max="4" step="1" value="-3" oninput="drawLvl4()">
+                    </div>
+                    <div class="live-status" id="status-lvl4"></div>
+                </div>
+                <div class="canvas-box">
+                    <canvas id="canvas-lvl4"></canvas>
+                </div>
+            </div>
+
+            <div class="challenge-box">
+                <span class="challenge-tag">🎯 چالش مرحله ۴ (+۱۰۰ امتیاز)</span>
+                <h3>رأس سهمی \(f(x) = (x - 4)^2 + 2\) در کدام نقطه قرار دارد؟</h3>
+                <div class="options-grid">
+                    <button class="option-btn" onclick="checkAnswer(4, false, this)">\((-4, 2)\)</button>
+                    <button class="option-btn" onclick="checkAnswer(4, true, this)">\((4, 2)\)</button>
+                    <button class="option-btn" onclick="checkAnswer(4, false, this)">\((4, -2)\)</button>
+                </div>
+                <div class="feedback-msg" id="fb-lvl4"></div>
+            </div>
+        </section>
+
+        <!-- LEVEL 5 -->
+        <section id="screen-lvl5" class="screen">
+            <div class="lesson-top">
+                <h2>🧭 مرحله ۵: فرمول رأس سهمی</h2>
+                <button class="btn btn-back" onclick="openLevel('screen-map')">نقشه مراحل</button>
+            </div>
+
+            <div class="tip-box">
+                <p><strong>فرم استاندارد:</strong> <span class="formula-pill">\(f(x) = ax^2 + bx + c\)</span> — فرمول \(x\) رأس: <span class="formula-pill">\(x = -\frac{b}{2a}\)</span></p>
+                <p>پس از یافتن \(x\) رأس و جایگذاری آن برای \(y\) رأس، یک واحد چپ و یک واحد راست را برای نقاط متقارن انتخاب کنید.</p>
+            </div>
+
+            <div class="examples-bar">
+                <h4>📌 مثال‌های فرمول رأس:</h4>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setLvl5(1, -4, 3, 'مثال جزوه: $f(x) = x^2 - 4x + 3$ — $x_{\\text{رأس}} = \\frac{-(-4)}{2(1)} = 2$ و $y_{\\text{رأس}} = -1$.')">\(x^2 - 4x + 3\)</button>
+                    <button class="preset-btn" onclick="setLvl5(1, 2, -3, 'مثال ۲: $f(x) = x^2 + 2x - 3$ — $x_{\\text{رأس}} = \\frac{-2}{2(1)} = -1$ و $y_{\\text{رأس}} = -4$.')">\(x^2 + 2x - 3\)</button>
+                    <button class="preset-btn" onclick="setLvl5(-1, 4, -1, 'مثال ۳: $f(x) = -x^2 + 4x - 1$ — $x_{\\text{رأس}} = \\frac{-4}{2(-1)} = 2$ و $y_{\\text{رأس}} = 3$.')">\(-x^2 + 4x - 1\)</button>
+                </div>
+                <div class="example-explain" id="explain-lvl5">نقطه نارنجی رأس سهمی و نقاط سبز نقاط متقارن دو طرف آن هستند.</div>
+            </div>
+
+            <div class="lab-grid">
+                <div class="controls-card">
+                    <div class="slider-item">
+                        <div class="slider-header"><span>ضریب \(a\):</span><span class="badge-val" id="disp-l5-a">1</span></div>
+                        <input type="range" id="in-l5-a" min="-2" max="2" step="1" value="1" oninput="drawLvl5()">
+                    </div>
+                    <div class="slider-item">
+                        <div class="slider-header"><span>ضریب \(b\):</span><span class="badge-val" id="disp-l5-b">-4</span></div>
+                        <input type="range" id="in-l5-b" min="-6" max="6" step="2" value="-4" oninput="drawLvl5()">
+                    </div>
+                    <div class="slider-item">
+                        <div class="slider-header"><span>ضریب \(c\):</span><span class="badge-val" id="disp-l5-c">3</span></div>
+                        <input type="range" id="in-l5-c" min="-4" max="4" step="1" value="3" oninput="drawLvl5()">
+                    </div>
+                    <div class="live-status" id="status-lvl5"></div>
+                </div>
+                <div class="canvas-box">
+                    <canvas id="canvas-lvl5"></canvas>
+                </div>
+            </div>
+
+            <div class="challenge-box">
+                <span class="challenge-tag">🎯 چالش مرحله ۵ (+۱۰۰ امتیاز)</span>
+                <h3>برای سهمی \(f(x) = x^2 - 6x + 5\)، مختصات \(x\) رأس کدام است؟</h3>
+                <div class="options-grid">
+                    <button class="option-btn" onclick="checkAnswer(5, false, this)">\(x = -3\)</button>
+                    <button class="option-btn" onclick="checkAnswer(5, true, this)">\(x = 3\)</button>
+                    <button class="option-btn" onclick="checkAnswer(5, false, this)">\(x = 6\)</button>
+                </div>
+                <div class="feedback-msg" id="fb-lvl5"></div>
+            </div>
+        </section>
+
+        <!-- LEVEL 6 -->
+        <section id="screen-lvl6" class="screen">
+            <div class="lesson-top">
+                <h2>⚔️ مرحله ۶: حل معادله و نامعادله با نمودار</h2>
+                <button class="btn btn-back" onclick="openLevel('screen-map')">نقشه مراحل</button>
+            </div>
+
+            <div class="tip-box">
+                <p>• <strong>معادله \(f(x) = 0\):</strong> نقاط برخورد نمودار با محور \(x\) ریشه‌های معادله هستند.</p>
+                <p>• <strong>نامعادله با هاشور:</strong> \(f(x) > 0\) یعنی بالای محور \(x\) و \(f(x) < 0\) یعنی زیر محور \(x\).</p>
+            </div>
+
+            <div class="examples-bar">
+                <h4>📌 انتخاب حالت حل معادله و نامعادله روی نمودار:</h4>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setLvl6('roots', 'معادله $x^2 - 4x + 3 = 0$: نقاط برخورد با محور $x$ در $x = 1$ و $x = 3$ هستند.')">معادله \(x^2 - 4x + 3 = 0\)</button>
+                    <button class="preset-btn" onclick="setLvl6('less', 'نامعادله $(x + 2)^2 - 3 < 0$: ناحیه زیر محور $x$ هاشور خورده؛ جواب باز $(-3.73, -0.27)$ است.')">نامعادله \((x+2)^2 - 3 < 0\)</button>
+                    <button class="preset-btn" onclick="setLvl6('greater', 'نامعادله $x^2 - 4 > 0$: شاخه‌های بالای محور $x$ هاشور خورده‌اند ($x < -2$ یا $x > 2$).')">نامعادله \(x^2 - 4 > 0\)</button>
+                </div>
+                <div class="example-explain" id="explain-lvl6">حالت مورد نظر را انتخاب کنید تا ریشه یا ناحیه هاشورخورده نمایش داده شود.</div>
+            </div>
+
+            <div class="lab-grid">
+                <div class="controls-card">
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <button class="btn btn-primary" onclick="setLvl6('roots', 'نمایش ریشه‌های معادله $x^2 - 4x + 3 = 0$ روی محور $x$')">ریشه‌های معادله (\(f(x) = 0\))</button>
+                        <button class="btn btn-orange" onclick="setLvl6('less', 'هاشور ناحیه زیر محور $x$ برای $(x+2)^2 - 3 < 0$')">هاشور زیر محور (\(f(x) < 0\))</button>
+                        <button class="btn" style="background: var(--turquoise); color: white;" onclick="setLvl6('greater', 'هاشور ناحیه بالای محور $x$ برای $x^2 - 4 > 0$')">هاشور بالای محور (\(f(x) > 0\))</button>
+                    </div>
+                    <div class="live-status" id="status-lvl6" style="margin-top: 0.8rem;"></div>
+                </div>
+                <div class="canvas-box">
+                    <canvas id="canvas-lvl6"></canvas>
+                </div>
+            </div>
+
+            <div class="challenge-box">
+                <span class="challenge-tag">🏆 چالش نهایی (+۱۰۰ امتیاز)</span>
+                <h3>برای یافتن جواب نامعادله \(f(x) < 0\) از روی نمودار، به کدام بخش نگاه می‌کنیم؟</h3>
+                <div class="options-grid">
+                    <button class="option-btn" onclick="checkAnswer(6, false, this)">قسمت بالای محور \(x\)</button>
+                    <button class="option-btn" onclick="checkAnswer(6, true, this)">قسمت زیر محور \(x\)</button>
+                    <button class="option-btn" onclick="checkAnswer(6, false, this)">فقط نقطه برخورد با محور \(y\)</button>
+                </div>
+                <div class="feedback-msg" id="fb-lvl6"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        مدرس: دکتر مریم هوتی نژاد | دکترای تخصصی هوش مصنوعی و رباتیک | پودمان دوم ریاضی یازدهم فنی —
+        کانال <a href="https://ble.ir/join/9soFcrfJNC" target="_blank" rel="noopener noreferrer">TeachNova</a>
+    </footer>
+
+    <script>
+        const STORAGE_KEY = 'riazi11_hootinejad_progress_v1';
+
+        let state = {
+            studentName: 'مهمان',
+            score: 0,
+            completedLevels: [],
+            currentScreen: 'screen-home'
+        };
+
+        let lvl6Mode = 'roots';
+
+        function typesetMath(el) {
+            if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+                window.MathJax.typesetPromise(el ? [el] : undefined).catch(() => {});
+            }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch (e) {}
+        }
+
+        function loadState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return;
+                const parsed = JSON.parse(raw);
+                if (parsed && typeof parsed === 'object') {
+                    state.studentName = parsed.studentName || 'مهمان';
+                    state.score = Number(parsed.score) || 0;
+                    state.completedLevels = Array.isArray(parsed.completedLevels) ? parsed.completedLevels : [];
+                    state.currentScreen = parsed.currentScreen || 'screen-home';
+                }
+            } catch (e) {}
+        }
+
+        function saveStudentName() {
+            const input = document.getElementById('student-name-input');
+            const name = input.value.trim();
+            if (!name) {
+                document.getElementById('student-greeting-msg').innerText = 'لطفاً ابتدا نام خود را وارد کنید.';
+                return;
+            }
+            state.studentName = name;
+            saveState();
+            updateHUD();
+            document.getElementById('student-greeting-msg').innerText = `سلام ${name} عزیز! نام شما ذخیره شد.`;
+        }
+
+        function updateHUD() {
+            document.getElementById('hud-student').innerText = state.studentName;
+            document.getElementById('hud-score').innerText = state.score;
+
+            const count = state.completedLevels.length;
+            const pct = Math.round((count / 6) * 100);
+            document.getElementById('hud-progress').style.width = pct + '%';
+
+            const summaryEl = document.getElementById('map-progress-summary');
+            if (summaryEl) {
+                summaryEl.innerText = `${count} از ۶ مرحله تکمیل شده (${pct}٪)`;
+            }
+
+            let rank = 'کارآموز';
+            if (state.score >= 600) rank = 'استاد توابع 👑';
+            else if (state.score >= 400) rank = 'شکارچی سهمی 🏹';
+            else if (state.score >= 200) rank = 'کاوشگر نمودار 🧭';
+            document.getElementById('hud-rank').innerText = rank;
+
+            for (let i = 1; i <= 6; i++) {
+                const card = document.getElementById('card-lvl' + i);
+                if (card) {
+                    if (state.completedLevels.includes(i)) {
+                        card.classList.add('completed');
+                    } else {
+                        card.classList.remove('completed');
+                    }
+                }
+            }
+        }
+
+        function checkAnswer(lvlNum, isCorrect, btnEl) {
+            const fb = document.getElementById('fb-lvl' + lvlNum);
+            if (isCorrect) {
+                fb.className = 'feedback-msg success';
+                if (!state.completedLevels.includes(lvlNum)) {
+                    state.completedLevels.push(lvlNum);
+                    state.score += 100;
+                    saveState();
+                    updateHUD();
+                    fb.innerHTML = '🎉 آفرین! پاسخ درست است. ۱۰۰ امتیاز ثبت شد.';
+                } else {
+                    fb.innerHTML = '✅ پاسخ درست است! (این مرحله قبلاً امتیاز گرفته است)';
+                }
+            } else {
+                fb.className = 'feedback-msg error';
+                fb.innerHTML = '❌ دقت کن! دوباره راهنما یا نمودار را بررسی کن.';
+            }
+        }
+
+        function resetProgress() {
+            state = {
+                studentName: state.studentName || 'مهمان',
+                score: 0,
+                completedLevels: [],
+                currentScreen: 'screen-home'
+            };
+            saveState();
+            updateHUD();
+            document.querySelectorAll('.feedback-msg').forEach(el => {
+                el.className = 'feedback-msg';
+                el.innerHTML = '';
+            });
+            document.getElementById('student-greeting-msg').innerText = 'امتیازها و مراحل ریست شدند.';
+        }
+
+        function openLevel(screenId) {
+            const target = document.getElementById(screenId) ? screenId : 'screen-home';
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            const activeScreen = document.getElementById(target);
+            activeScreen.classList.add('active');
+            state.currentScreen = target;
+            saveState();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            typesetMath(activeScreen);
+
+            setTimeout(() => {
+                if (target === 'screen-lvl1') drawLvl1();
+                if (target === 'screen-lvl2') drawLvl2();
+                if (target === 'screen-lvl3') drawLvl3();
+                if (target === 'screen-lvl4') drawLvl4();
+                if (target === 'screen-lvl5') drawLvl5();
+                if (target === 'screen-lvl6') drawLvl6();
+            }, 40);
+        }
+
+        function getCanvasHeight() {
+            return window.innerWidth <= 640 ? 320 : 410;
+        }
+
+        function initGraph(canvasId, xMin, xMax, yMin, yMax) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.parentElement.getBoundingClientRect();
+            const h = getCanvasHeight();
+
+            canvas.width = rect.width * dpr;
+            canvas.height = h * dpr;
+            ctx.scale(dpr, dpr);
+
+            const w = rect.width;
+            const pad = 34;
+            const gw = w - pad * 2;
+            const gh = h - pad * 2;
+
+            const scaleX = gw / (xMax - xMin);
+            const scaleY = gh / (yMax - yMin);
+
+            const toX = (x) => pad + (x - xMin) * scaleX;
+            const toY = (y) => h - pad - (y - yMin) * scaleY;
+
+            ctx.clearRect(0, 0, w, h);
+
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            for (let x = Math.ceil(xMin); x <= xMax; x++) {
+                ctx.moveTo(toX(x), pad);
+                ctx.lineTo(toX(x), h - pad);
+            }
+            for (let y = Math.ceil(yMin); y <= yMax; y++) {
+                ctx.moveTo(pad, toY(y));
+                ctx.lineTo(w - pad, toY(y));
+            }
+            ctx.stroke();
+
+            ctx.strokeStyle = '#0f172a';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            const y0 = toY(0);
+            const x0 = toX(0);
+            ctx.moveTo(pad, y0);
+            ctx.lineTo(w - pad, y0);
+            ctx.moveTo(x0, pad);
+            ctx.lineTo(x0, h - pad);
+            ctx.stroke();
+
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'bold 12px Vazirmatn';
+            ctx.fillText('x', w - pad + 10, y0 + 4);
+            ctx.fillText('y', x0 - 4, pad - 8);
+
+            ctx.fillStyle = '#475569';
+            ctx.font = '11px Vazirmatn';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            for (let x = Math.ceil(xMin); x <= xMax; x++) {
+                if (x !== 0) ctx.fillText(x, toX(x), y0 + 4);
+            }
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            for (let y = Math.ceil(yMin); y <= yMax; y++) {
+                if (y !== 0) ctx.fillText(y, x0 - 5, toY(y));
+            }
+            ctx.fillText('0', x0 - 4, y0 + 9);
+
+            return { ctx, toX, toY, w, h, pad };
+        }
+
+        function plotCurve(ctx, toX, toY, fn, xMin, xMax, color, width = 3, dashed = false) {
+            ctx.save();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = width;
+            if (dashed) ctx.setLineDash([6, 6]);
+            ctx.beginPath();
+            let started = false;
+            const step = (xMax - xMin) / 400;
+            for (let x = xMin; x <= xMax; x += step) {
+                const y = fn(x);
+                if (y > 20 || y < -20) {
+                    started = false;
+                    continue;
+                }
+                const sx = toX(x);
+                const sy = toY(y);
+                if (!started) {
+                    ctx.moveTo(sx, sy);
+                    started = true;
+                } else {
+                    ctx.lineTo(sx, sy);
+                }
+            }
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function drawDot(ctx, toX, toY, x, y, color, label, hollow = false, radius = 6) {
+            const sx = toX(x);
+            const sy = toY(y);
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(sx, sy, radius, 0, Math.PI * 2);
+            if (hollow) {
+                ctx.fillStyle = '#ffffff';
+                ctx.fill();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 3;
+                ctx.stroke();
+            } else {
+                ctx.fillStyle = color;
+                ctx.fill();
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+            if (label) {
+                ctx.fillStyle = color;
+                ctx.font = 'bold 12px Vazirmatn';
+                ctx.textAlign = 'center';
+                ctx.fillText(label, sx, sy - 11);
+            }
+            ctx.restore();
+        }
+
+        // Level 1
+        function setLvl1(a, b, msg) {
+            document.getElementById('in-l1-a').value = a;
+            document.getElementById('in-l1-b').value = b;
+            const expEl = document.getElementById('explain-lvl1');
+            expEl.innerHTML = msg;
+            typesetMath(expEl);
+            drawLvl1();
+        }
+
+        function drawLvl1() {
+            const a = parseFloat(document.getElementById('in-l1-a').value);
+            const b = parseFloat(document.getElementById('in-l1-b').value);
+            document.getElementById('disp-l1-a').innerText = a;
+            document.getElementById('disp-l1-b').innerText = b;
+
+            const { ctx, toX, toY } = initGraph('canvas-lvl1', -5, 5, -5, 5);
+            plotCurve(ctx, toX, toY, x => a * x + b, -5, 5, '#0284c7', 3.5);
+            drawDot(ctx, toX, toY, 0, b, '#f97316', `(0, ${b})`);
+            if (a !== 0) {
+                drawDot(ctx, toX, toY, 1, a + b, '#0d9488', `(1, ${a + b})`);
+            }
+
+            const typeText = a > 0 ? 'صعودی' : (a < 0 ? 'نزولی' : 'ثابت (افقی)');
+            const formulaStr = a === 0 ? `f(x) = ${b}` : `f(x) = ${a}x ${b >= 0 ? '+ ' + b : '- ' + Math.abs(b)}`;
+            document.getElementById('status-lvl1').innerHTML = `
+                <strong>ضابطه:</strong> <span dir="ltr">${formulaStr}</span><br>
+                <strong>نوع:</strong> ${typeText}
+            `;
+        }
+
+        // Level 2
+        let l2Slope = -2, l2Intercept = 1;
+        function setLvl2(a, b, x1, x2, c1, c2, msg) {
+            l2Slope = a;
+            l2Intercept = b;
+            document.getElementById('in-l2-x1').value = x1;
+            document.getElementById('in-l2-x2').value = x2;
+            document.getElementById('chk-l2-c1').checked = c1;
+            document.getElementById('chk-l2-c2').checked = c2;
+            const expEl = document.getElementById('explain-lvl2');
+            expEl.innerHTML = msg;
+            typesetMath(expEl);
+            drawLvl2();
+        }
+
+        function drawLvl2() {
+            const x1 = parseInt(document.getElementById('in-l2-x1').value);
+            const x2 = parseInt(document.getElementById('in-l2-x2').value);
+            const c1 = document.getElementById('chk-l2-c1').checked;
+            const c2 = document.getElementById('chk-l2-c2').checked;
+
+            document.getElementById('disp-l2-x1').innerText = x1;
+            document.getElementById('disp-l2-x2').innerText = x2;
+
+            const { ctx, toX, toY } = initGraph('canvas-lvl2', -5, 6, -7, 6);
+            const fn = x => l2Slope * x + l2Intercept;
+
+            plotCurve(ctx, toX, toY, fn, -5, 6, '#cbd5e1', 1.5, true);
+            plotCurve(ctx, toX, toY, fn, x1, x2, '#0284c7', 4, false);
+
+            const y1 = fn(x1);
+            const y2 = fn(x2);
+            drawDot(ctx, toX, toY, x1, y1, '#f97316', `(${x1}, ${y1})`, !c1, 7);
+            drawDot(ctx, toX, toY, x2, y2, '#0d9488', `(${x2}, ${y2})`, !c2, 7);
+
+            const bLeft = c1 ? '[' : '(';
+            const bRight = c2 ? ']' : ')';
+            document.getElementById('status-lvl2').innerHTML = `
+                <strong>تابع:</strong> <span dir="ltr">f(x) = ${l2Slope}x ${l2Intercept >= 0 ? '+ ' + l2Intercept : '- ' + Math.abs(l2Intercept)}</span><br>
+                <strong>بازه:</strong> <span dir="ltr">${bLeft}${x1} , ${x2}${bRight}</span>
+            `;
+        }
+
+        // Level 3
+        function setLvl3(a, msg) {
+            document.getElementById('in-l3-a').value = a;
+            const expEl = document.getElementById('explain-lvl3');
+            expEl.innerHTML = msg;
+            typesetMath(expEl);
+            drawLvl3();
+        }
+
+        function drawLvl3() {
+            let a = parseFloat(document.getElementById('in-l3-a').value);
+            if (a === 0) a = 0.5;
+            document.getElementById('disp-l3-a').innerText = a;
+
+            const { ctx, toX, toY } = initGraph('canvas-lvl3', -4, 4, -6, 6);
+            plotCurve(ctx, toX, toY, x => a * x * x, -4, 4, '#0284c7', 3.5);
+            drawDot(ctx, toX, toY, 0, 0, '#f97316', 'رأس (0, 0)');
+            drawDot(ctx, toX, toY, 1, a, '#0d9488', `(1, ${a})`);
+            drawDot(ctx, toX, toY, -1, a, '#0d9488', `(-1, ${a})`);
+
+            document.getElementById('status-lvl3').innerHTML = `
+                <strong>ضابطه:</strong> <span dir="ltr">f(x) = ${a}x²</span><br>
+                <strong>جهت منحنی:</strong> ${a > 0 ? 'رو به بالا' : 'رو به پایین'}
+            `;
+        }
+
+        // Level 4
+        function setLvl4(h, k, msg) {
+            document.getElementById('in-l4-h').value = h;
+            document.getElementById('in-l4-k').value = k;
+            const expEl = document.getElementById('explain-lvl4');
+            expEl.innerHTML = msg;
+            typesetMath(expEl);
+            drawLvl4();
+        }
+
+        function drawLvl4() {
+            const h = parseInt(document.getElementById('in-l4-h').value);
+            const k = parseInt(document.getElementById('in-l4-k').value);
+            document.getElementById('disp-l4-h').innerText = h;
+            document.getElementById('disp-l4-k').innerText = k;
+
+            const { ctx, toX, toY } = initGraph('canvas-lvl4', -6, 6, -6, 6);
+            plotCurve(ctx, toX, toY, x => x * x, -6, 6, '#94a3b8', 2, true);
+            plotCurve(ctx, toX, toY, x => Math.pow(x - h, 2) + k, -6, 6, '#0284c7', 3.5);
+            drawDot(ctx, toX, toY, h, k, '#f97316', `رأس (${h}, ${k})`, false, 7);
+
+            const inner = h === 0 ? 'x²' : (h > 0 ? `(x - ${h})²` : `(x + ${Math.abs(h)})²`);
+            const outer = k === 0 ? '' : (k > 0 ? ` + ${k}` : ` - ${Math.abs(k)}`);
+            document.getElementById('status-lvl4').innerHTML = `
+                <strong>فرمول:</strong> <span dir="ltr">y = ${inner}${outer}</span><br>
+                <strong>رأس جدید:</strong> <span dir="ltr">(${h}, ${k})</span>
+            `;
+        }
+
+        // Level 5
+        function setLvl5(a, b, c, msg) {
+            document.getElementById('in-l5-a').value = a;
+            document.getElementById('in-l5-b').value = b;
+            document.getElementById('in-l5-c').value = c;
+            const expEl = document.getElementById('explain-lvl5');
+            expEl.innerHTML = msg;
+            typesetMath(expEl);
+            drawLvl5();
+        }
+
+        function drawLvl5() {
+            let a = parseInt(document.getElementById('in-l5-a').value);
+            if (a === 0) a = 1;
+            const b = parseInt(document.getElementById('in-l5-b').value);
+            const c = parseInt(document.getElementById('in-l5-c').value);
+
+            document.getElementById('disp-l5-a').innerText = a;
+            document.getElementById('disp-l5-b').innerText = b;
+            document.getElementById('disp-l5-c').innerText = c;
+
+            const { ctx, toX, toY } = initGraph('canvas-lvl5', -5, 6, -6, 7);
+            const fn = x => a * x * x + b * x + c;
+            plotCurve(ctx, toX, toY, fn, -5, 6, '#0284c7', 3.5);
+
+            const vx = -b / (2 * a);
+            const vy = fn(vx);
+            drawDot(ctx, toX, toY, vx, vy, '#f97316', `رأس (${vx}, ${vy})`, false, 7);
+            drawDot(ctx, toX, toY, vx - 1, fn(vx - 1), '#0d9488', `(${vx - 1}, ${fn(vx - 1)})`);
+            drawDot(ctx, toX, toY, vx + 1, fn(vx + 1), '#0d9488', `(${vx + 1}, ${fn(vx + 1)})`);
+
+            document.getElementById('status-lvl5').innerHTML = `
+                <strong>x رأس:</strong> <span dir="ltr">x = -(${b}) / 2(${a}) = ${vx}</span><br>
+                <strong>مختصات رأس:</strong> <span dir="ltr">(${vx}, ${vy})</span>
+            `;
+        }
+
+        // Level 6
+        function setLvl6(mode, msg) {
+            lvl6Mode = mode;
+            const expEl = document.getElementById('explain-lvl6');
+            expEl.innerHTML = msg;
+            typesetMath(expEl);
+            drawLvl6();
+        }
+
+        function drawLvl6() {
+            if (lvl6Mode === 'roots') {
+                const { ctx, toX, toY } = initGraph('canvas-lvl6', -2, 5, -3, 5);
+                const fn = x => x * x - 4 * x + 3;
+                plotCurve(ctx, toX, toY, fn, -2, 5, '#0284c7', 3.5);
+                drawDot(ctx, toX, toY, 1, 0, '#ef4444', 'x = 1', false, 8);
+                drawDot(ctx, toX, toY, 3, 0, '#ef4444', 'x = 3', false, 8);
+                drawDot(ctx, toX, toY, 2, -1, '#f97316', 'رأس (2, -1)', false, 5);
+                document.getElementById('status-lvl6').innerHTML = '<strong>ریشه‌ها:</strong> <span dir="ltr">x = 1</span> و <span dir="ltr">x = 3</span>';
+            } else if (lvl6Mode === 'less') {
+                const { ctx, toX, toY } = initGraph('canvas-lvl6', -5, 2, -4, 4);
+                const fn = x => Math.pow(x + 2, 2) - 3;
+                const r1 = -2 - Math.sqrt(3);
+                const r2 = -2 + Math.sqrt(3);
+
+                ctx.save();
+                ctx.fillStyle = 'rgba(249, 115, 22, 0.28)';
+                ctx.beginPath();
+                ctx.moveTo(toX(r1), toY(0));
+                for (let x = r1; x <= r2; x += 0.05) {
+                    ctx.lineTo(toX(x), toY(fn(x)));
+                }
+                ctx.lineTo(toX(r2), toY(0));
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+
+                plotCurve(ctx, toX, toY, fn, -5, 2, '#0284c7', 3.5);
+                drawDot(ctx, toX, toY, r1, 0, '#f97316', '-3.73', true, 6);
+                drawDot(ctx, toX, toY, r2, 0, '#f97316', '-0.27', true, 6);
+                document.getElementById('status-lvl6').innerHTML = '<strong>جواب زیر محور:</strong> <span dir="ltr">(-3.73 , -0.27)</span>';
+            } else if (lvl6Mode === 'greater') {
+                const { ctx, toX, toY } = initGraph('canvas-lvl6', -4, 4, -5, 6);
+                const fn = x => x * x - 4;
+
+                ctx.save();
+                ctx.fillStyle = 'rgba(13, 148, 136, 0.25)';
+                ctx.beginPath();
+                ctx.moveTo(toX(-3.2), toY(0));
+                for (let x = -3.2; x <= -2; x += 0.05) ctx.lineTo(toX(x), toY(fn(x)));
+                ctx.lineTo(toX(-2), toY(0));
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.moveTo(toX(2), toY(0));
+                for (let x = 2; x <= 3.2; x += 0.05) ctx.lineTo(toX(x), toY(fn(x)));
+                ctx.lineTo(toX(3.2), toY(0));
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+
+                plotCurve(ctx, toX, toY, fn, -4, 4, '#0284c7', 3.5);
+                drawDot(ctx, toX, toY, -2, 0, '#0d9488', 'x = -2', true, 6);
+                drawDot(ctx, toX, toY, 2, 0, '#0d9488', 'x = 2', true, 6);
+                document.getElementById('status-lvl6').innerHTML = '<strong>جواب بالای محور:</strong> <span dir="ltr">x &lt; -2</span> یا <span dir="ltr">x &gt; 2</span>';
+            }
+        }
+
+        // Restore saved state on load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadState();
+            if (state.studentName && state.studentName !== 'مهمان') {
+                document.getElementById('student-name-input').value = state.studentName;
+                document.getElementById('student-greeting-msg').innerText = `خوش آمدید ${state.studentName} عزیز! پیشرفت شما ذخیره شده است.`;
+            }
+            updateHUD();
+            openLevel(state.currentScreen || 'screen-home');
+        });
+
+        window.addEventListener('resize', () => {
+            const active = document.querySelector('.screen.active');
+            if (!active) return;
+            if (active.id === 'screen-lvl1') drawLvl1();
+            if (active.id === 'screen-lvl2') drawLvl2();
+            if (active.id === 'screen-lvl3') drawLvl3();
+            if (active.id === 'screen-lvl4') drawLvl4();
+            if (active.id === 'screen-lvl5') drawLvl5();
+            if (active.id === 'screen-lvl6') drawLvl6();
+        });
+    </script>
+</body>
+</html>
